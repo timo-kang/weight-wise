@@ -7,43 +7,119 @@
   <title>1RM Calculator with RPE and Powerlifting Standards</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
+      margin: 10px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: #333;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      max-width: 600px;
+      width: 100%;
       padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      background: linear-gradient(90deg, #4CAF50, #45a049);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    label,
+    select,
+    input,
+    button {
+      width: auto;
     }
 
     select,
     input {
-      margin: 5px;
-      padding: 5px;
+      margin-top: 5px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
     }
 
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #3e8e41;
+      transform: scale(1.05);
+    }
+
+    .result,
+    #powerliftingResult {
+      margin-top: 15px;
     }
 
     .result-table {
-      margin-top: 20px;
+      margin-top: 15px;
       border-collapse: collapse;
       width: 100%;
+      font-size: 14px;
+      text-align: center;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .result-table td,
     .result-table th {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
       border: 1px solid #ddd;
-      padding: 8px;
     }
 
-    .result-table th {
+    .result-table td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: center; /* Ensures text alignment */
+      font-size: 14px; /* Ensures consistent font size */
+      color: #333; /* Sets text color */
+      background-color: #fff; /* Default background color */
+    }
+
+    .result-table tr:nth-child(even) {
       background-color: #f2f2f2;
     }
 
+    .result-table tr:hover {
+      background-color: #e0f7e0;
+      transition: background-color 0.3s ease;
+    }
+
     .powerlifting-visual {
-      margin-top: 20px;
+      margin-top: 10px;
       width: 100%;
       height: 30px;
       position: relative;
       background: #f0f0f0;
+      border-radius: 6px;
+      overflow: hidden;
     }
 
     .powerlifting-visual span {
@@ -55,76 +131,66 @@
 </head>
 
 <body>
+  <div class="container">
+    <h1>1RM Calculator</h1>
 
-  <h1>1RM Calculator with RPE and Powerlifting Standards</h1>
+    <!-- Exercise Selection -->
+    <label for="exercise">Choose Exercise:</label>
+    <select id="exercise">
+      <option value="Squat">Squat</option>
+      <option value="Bench Press">Bench Press</option>
+      <option value="Deadlift">Deadlift</option>
+    </select>
 
-  <!-- Exercise Selection -->
-  <label for="exercise">Choose Exercise:</label>
-  <select id="exercise">
-    <option value="Squat">Squat</option>
-    <option value="Bench Press">Bench Press</option>
-    <option value="Deadlift">Deadlift</option>
-  </select>
-  <br>
+    <!-- Unit Selection -->
+    <label for="unit">Select Weight Unit:</label>
+    <select id="unit">
+      <option value="kg">kg</option>
+      <option value="lbs">lbs</option>
+    </select>
 
-  <!-- Unit Selection -->
-  <label for="unit">Select Weight Unit:</label>
-  <select id="unit">
-    <option value="kg">kg</option>
-    <option value="lbs">lbs</option>
-  </select>
-  <br>
+    <!-- Weight Input -->
+    <label for="weight">Enter Weight Lifted:</label>
+    <input type="number" id="weight" placeholder="Weight" required>
 
-  <!-- Weight Input -->
-  <label for="weight">Enter Weight Lifted:</label>
-  <input type="number" id="weight" placeholder="Weight" required>
-  <br>
+    <!-- Reps Input -->
+    <label for="reps">Enter Reps Performed:</label>
+    <input type="number" id="reps" placeholder="Reps" required>
 
-  <!-- Reps Input -->
-  <label for="reps">Enter Reps Performed:</label>
-  <input type="number" id="reps" placeholder="Reps" required>
-  <br>
+    <!-- RPE Input -->
+    <label for="rpe">Enter RPE (0-10):</label>
+    <input type="number" id="rpe" placeholder="RPE" min="0" max="10" value="10" required>
 
-  <!-- RPE Input (default to 10) -->
-  <label for="rpe">Enter RPE (0-10):</label>
-  <input type="number" id="rpe" placeholder="RPE" min="0" max="10" value="10" required>
-  <br>
+    <!-- Calculate Button -->
+    <button onclick="calculate1RM()">Calculate 1RM</button>
 
-  <!-- Calculate Button -->
-  <button onclick="calculate1RM()">Calculate 1RM</button>
+    <!-- Output for 1RM and RPE Levels -->
+    <div id="result" class="result"></div>
 
-  <!-- Output for 1RM and RPE Levels -->
-  <div id="result" class="result"></div>
+    <!-- Powerlifting Standards Section -->
+    <h2>Powerlifting Standards</h2>
+    <label for="sex">Select Sex:</label>
+    <select id="sex">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
 
-  <!-- Powerlifting Standards Section -->
-  <h2>Powerlifting Standards</h2>
-  <label for="sex">Select Sex:</label>
-  <select id="sex">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </select>
-  <br>
+    <label for="bodyweight">Enter Bodyweight (kg):</label>
+    <input type="number" id="bodyweight" required>
 
-  <label for="bodyweight">Enter Bodyweight (kg):</label>
-  <input type="number" id="bodyweight" required>
-  <br>
+    <label for="squatWeight">Enter Squat Lift (kg):</label>
+    <input type="number" id="squatWeight" required>
 
-  <label for="squatWeight">Enter Squat Lift (kg):</label>
-  <input type="number" id="squatWeight" required>
-  <br>
+    <label for="benchWeight">Enter Bench Press Lift (kg):</label>
+    <input type="number" id="benchWeight" required>
 
-  <label for="benchWeight">Enter Bench Press Lift (kg):</label>
-  <input type="number" id="benchWeight" required>
-  <br>
+    <label for="deadliftWeight">Enter Deadlift Lift (kg):</label>
+    <input type="number" id="deadliftWeight" required>
 
-  <label for="deadliftWeight">Enter Deadlift Lift (kg):</label>
-  <input type="number" id="deadliftWeight" required>
-  <br>
+    <button onclick="calculatePowerliftingLevel()">Calculate Powerlifting Level</button>
 
-  <button onclick="calculatePowerliftingLevel()">Calculate Powerlifting Level</button>
-
-  <div id="powerliftingResult"></div>
-
+    <div id="powerliftingResult"></div>
+  </div>
   <script>
     // Calculate 1RM using RPE formula
     function calculate1RM() {
@@ -143,24 +209,40 @@
 
       // Calculate RM levels for 0-10 RPE
       let rmResults = [];
-      for (let i = 0; i <= 10; i++) {
+      for (let i = 10; i > 0; i--) {
         const estimated1RM = weight * (1 + (reps / 30) * (10 - i));
         rmResults.push({ RPE: i, Estimated1RM: estimated1RM.toFixed(2), Weight: weight.toFixed(2), Reps: reps });
       }
 
       // Display the results
       const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = `<h2>Results for ${unit}</h2>
-                                   <p><strong>1RM (Estimated):</strong> ${oneRM.toFixed(2)} ${unit}</p>
-                                   <h3>RPE-based Estimations</h3>
-                                   <table class="result-table">
-                                       <tr><th>RPE</th><th>Estimated 1RM</th><th>Weight</th><th>Reps</th></tr>`;
 
-      rmResults.forEach(result => {
-        resultDiv.innerHTML += `<tr><td>${result.RPE}</td><td>${result.Estimated1RM} ${unit}</td><td>${result.Weight} ${unit}</td><td>${result.Reps}</td></tr>`;
+      resultDiv.innerHTML = ""; // Clear previous results
+      resultDiv.innerHTML += `<h2>1RM Calculation</h2>
+                                     <p><strong>Exercise:</strong> ${document.getElementById("exercise").value}</p>
+                                     <p><strong>Weight Lifted:</strong> ${weight} ${unit}</p>
+                                     <p><strong>Reps Performed:</strong> ${reps}</p>
+                                     <p><strong>RPE:</strong> ${rpe}</p>
+                                     <h3>Estimated 1RM</h3>
+                                     <p>${oneRM.toFixed(2)} ${unit}</p>`;
+
+      resultDiv.innerHTML += `<h3>RPE-based Estimations</h3>`;
+      resultDiv.innerHTML += createTable(rmResults);
+      resultDiv.innerHTML += `<p>Note: The RPE scale is subjective and may vary between individuals.</p>`;
+    }
+
+    function createTable(data) {
+      let table = "<table class='result-table'><tr><th>RPE</th><th>Estimated 1RM</th><th>Weight</th><th>Reps</th></tr>";
+      data.forEach(row => {
+        table += `<tr>
+          <td>${row.RPE}</td>
+          <td>${row.Estimated1RM}</td>
+          <td>${row.Weight}</td>
+          <td>${row.Reps}</td>
+        </tr>`;
       });
-
-      resultDiv.innerHTML += `</table>`;
+      table += "</table>";
+      return table;
     }
 
     // Powerlifting Standards Calculation
@@ -194,14 +276,14 @@
       // Create a visual bar showing where the lifter is compared to standards
       const powerliftingResult = document.getElementById("powerliftingResult");
       powerliftingResult.innerHTML = `
-                <h3>Powerlifting Standards</h3>
-                <p><strong>Squat:</strong> ${squatLevel.toFixed(2)} (Novice: ${level.Novice}, Elite: ${level.Elite})</p>
-                <div class="powerlifting-visual"><span style="width: ${(squatLevel / level.Elite) * 100}%"></span></div>
-                <p><strong>Bench Press:</strong> ${benchLevel.toFixed(2)} (Novice: ${level.Novice}, Elite: ${level.Elite})</p>
-                <div class="powerlifting-visual"><span style="width: ${(benchLevel / level.Elite) * 100}%"></span></div>
-                <p><strong>Deadlift:</strong> ${deadliftLevel.toFixed(2)} (Novice: ${level.Novice}, Elite: ${level.Elite})</p>
-                <div class="powerlifting-visual"><span style="width: ${(deadliftLevel / level.Elite) * 100}%"></span></div>
-            `;
+                  <h3>Powerlifting Standards</h3>
+                  <p><strong>Squat:</strong> ${squatLevel.toFixed(2)} (Novice: ${level.Novice}, Intermediate: ${level.Intermediate}, Advance: ${level.Advanced}, Elite: ${level.Elite})</p>
+                  <div class="powerlifting-visual"><span style="width: ${(squatLevel / level.Elite) * 100}%"></span></div>
+                  <p><strong>Bench Press:</strong> ${benchLevel.toFixed(2)} (Novice: ${level.Novice}, Intermediate: ${level.Intermediate}, Advance: ${level.Advanced}, Elite: ${level.Elite})</p>
+                  <div class="powerlifting-visual"><span style="width: ${(benchLevel / level.Elite) * 100}%"></span></div>
+                  <p><strong>Deadlift:</strong> ${deadliftLevel.toFixed(2)} (Novice: ${level.Novice}, Intermediate: ${level.Intermediate}, Advance: ${level.Advanced}, Elite: ${level.Elite})</p>
+                  <div class="powerlifting-visual"><span style="width: ${(deadliftLevel / level.Elite) * 100}%"></span></div>
+              `;
     }
   </script>
 
